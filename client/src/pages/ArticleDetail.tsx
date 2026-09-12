@@ -1,4 +1,5 @@
 import PublicLayout from "@/components/PublicLayout";
+import ArticleEngagement from "@/components/ArticleEngagement";
 import { formatThaiDate, getTopic } from "@shared/editorial";
 import { ArrowLeft, ExternalLink, Play } from "lucide-react";
 import { trpc } from "@/lib/trpc";
@@ -78,6 +79,8 @@ export default function ArticleDetail() {
               <p className="mt-2">บทความชิ้นนี้ใช้แหล่งข้อมูลเพื่อประกอบการตั้งคำถาม มิใช่คำแนะนำเฉพาะบุคคล</p>
             </aside>
           </div>
+
+          <ArticleEngagement articleId={article.id} title={article.title} />
 
           <section className="border-t border-[#243932]/10 bg-[#ece7da] py-14 md:py-20">
             <div className="container max-w-4xl">

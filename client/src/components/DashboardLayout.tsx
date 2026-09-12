@@ -27,9 +27,12 @@ import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
-const menuItems = [
+const getMenuItems = (isAdmin: boolean) => isAdmin ? [
   { icon: LayoutDashboard, label: "บทความทั้งหมด", path: "/editor" },
   { icon: Plus, label: "เขียนบทความ", path: "/editor/articles/new" },
+] : [
+  { icon: LayoutDashboard, label: "งานเขียนของฉัน", path: "/editor" },
+  { icon: Plus, label: "ส่งบทความ", path: "/editor/articles/new" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -65,7 +68,7 @@ export default function DashboardLayout({
               เข้าสู่ระบบเพื่อทำงานต่อ
             </h1>
             <p className="text-sm text-muted-foreground text-center max-w-sm">
-              พื้นที่นี้สงวนไว้สำหรับผู้ดูแลเนื้อหาเท่านั้น
+              เขียนบทความของคุณและส่งให้ทีมงานตรวจสอบก่อนเผยแพร่
             </p>
           </div>
           <Button
@@ -110,6 +113,7 @@ function DashboardLayoutContent({
   const isCollapsed = state === "collapsed";
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const menuItems = getMenuItems(user?.role === "admin");
   const activeMenuItem = menuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
 
@@ -169,7 +173,7 @@ function DashboardLayoutContent({
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="font-semibold tracking-tight truncate">
-                    พื้นที่บรรณาธิการ
+                    {user?.role === "admin" ? "พื้นที่บรรณาธิการ" : "พื้นที่นักเขียน"}
                   </span>
                 </div>
               ) : null}

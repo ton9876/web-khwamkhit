@@ -6,7 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ArticleDetail from "./pages/ArticleDetail";
 import Articles from "./pages/Articles";
-import { EditorArticleForm, EditorDashboard } from "./pages/Editor";
+import { EditorArticleForm, EditorDashboard, EditorPreview } from "./pages/Editor";
 import Home from "./pages/Home";
 
 function Router() {
@@ -18,6 +18,7 @@ function Router() {
       <Route path={"/articles/:slug"} component={ArticleDetail} />
       <Route path={"/editor"} component={EditorDashboard} />
       <Route path={"/editor/articles/new"} component={EditorArticleForm} />
+      <Route path={"/editor/articles/:id/preview"} component={EditorPreview} />
       <Route path={"/editor/articles/:id"} component={EditorArticleForm} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

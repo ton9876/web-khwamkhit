@@ -6,7 +6,7 @@ export const TOPICS = [
 ] as const;
 
 export type TopicId = (typeof TOPICS)[number]["id"];
-export type ArticleStatus = "draft" | "published";
+export type ArticleStatus = "draft" | "submitted" | "changes_requested" | "approved" | "published";
 
 export type ArticleReference = {
   title: string;
@@ -24,6 +24,9 @@ export type EditorialArticle = {
   excerpt: string;
   topic: TopicId;
   status: ArticleStatus;
+  authorId?: number | null;
+  authorName?: string | null;
+  reviewNote?: string | null;
   body: string[];
   coverImageUrl?: string | null;
   coverAlt?: string | null;

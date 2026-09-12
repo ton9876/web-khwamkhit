@@ -15,6 +15,20 @@
       "when": 1788666565813,
       "tag": "0001_young_cyclops",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1789101805936,
+      "tag": "0002_oval_shaman",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1789148887799,
+      "tag": "0003_dark_ben_grimm",
+      "breakpoints": true
     }
   ]
 }

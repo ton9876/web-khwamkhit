@@ -40,7 +40,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             ))}
             <Link href="/editor" className="button-ink text-sm">
               <PenLine size={15} />
-              พื้นที่บรรณาธิการ
+              ส่งบทความ
             </Link>
           </nav>
 
@@ -63,7 +63,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 </a>
               ))}
               <Link href="/editor" onClick={() => setOpen(false)} className="mt-2 inline-flex w-fit items-center gap-2 text-sm font-semibold text-[#b8653d]">
-                <PenLine size={15} /> พื้นที่บรรณาธิการ
+                <PenLine size={15} /> ส่งบทความ
               </Link>
             </nav>
           </div>
