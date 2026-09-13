@@ -73,7 +73,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <footer className="border-t border-[#243932]/10 bg-[#243932] py-12 text-[#eae4d6]">
         <div className="container grid gap-8 md:grid-cols-[1.5fr_1fr]">
           <div>
-            <p className="font-serif-thai text-2xl">พื้นทางความคิด</p>
+            <p className="font-serif-thai text-2xl">พื้นที่ทางความคิด</p>
             <p className="mt-3 max-w-md text-sm leading-7 text-[#eae4d6]/70">พื้นที่สำหรับทำความเข้าใจชีวิต การกินอยู่ สิ่งแวดล้อม และการอยู่ร่วมกันอย่างมีความหมาย</p>
           </div>
           <div className="text-sm leading-7 text-[#eae4d6]/70 md:justify-self-end md:text-right">
