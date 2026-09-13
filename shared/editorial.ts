@@ -2,7 +2,7 @@ export const TOPICS = [
   { id: "living", label: "การใช้ชีวิต", description: "ความสัมพันธ์ การเลี้ยงดู และการอยู่กับความเปลี่ยนแปลง", accent: "#b8653d" },
   { id: "food", label: "การกินอยู่", description: "อาหาร บ้าน และความพอดีในชีวิตประจำวัน", accent: "#c79a45" },
   { id: "environment", label: "สิ่งแวดล้อม", description: "การใช้ทรัพยากรและการเห็นความเชื่อมโยงกับส่วนรวม", accent: "#71845e" },
-  { id: "ethics", label: "ศีลธรรมจรรยา", description: "ความรับผิดชอบ การอยู่ร่วมกัน และการเลือกอย่างมีสติ", accent: "#3f6b62" },
+  { id: "ethics", label: "คุณธรรมความดี", description: "ความรับผิดชอบ การอยู่ร่วมกัน และการเลือกอย่างมีสติ", accent: "#3f6b62" },
 ] as const;
 
 export type TopicId = (typeof TOPICS)[number]["id"];
