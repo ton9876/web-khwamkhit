@@ -21,7 +21,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               <Leaf size={19} strokeWidth={1.7} />
             </span>
             <span>
-              <span className="block font-serif-thai text-xl font-semibold leading-none tracking-tight">พื้นทางความคิด</span>
+              <span className="block font-serif-thai text-xl font-semibold leading-none tracking-tight">พื้นที่ทางความคิด</span>
               <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.17em] text-[#7c877d]">Thoughtful ground</span>
             </span>
           </Link>
