@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { appRouter } from "./routers";
 import * as db from "./db";
+import * as storage from "./storage";
 import type { TrpcContext } from "./_core/context";
 
 function createContext(role: "admin" | "user"): TrpcContext {
@@ -74,6 +75,19 @@ describe("editorial authorization and validation", () => {
     const result = await caller.articles.myCreate({ article: { ...articleWithoutSources, references: [{ title: "แหล่งอ้างอิงทดสอบ", url: "https://example.com/source" }] }, action: "submit" });
     expect(result).toEqual({ id: 321 });
     expect(create).toHaveBeenCalledWith(expect.objectContaining({ authorId: 7, status: "submitted", submittedAt: expect.any(Date) }));
+  });
+
+  it("runs the contributor media and submission flow with references", async () => {
+    const upload = vi.spyOn(storage, "storagePut").mockResolvedValue({ key: "editorial/7/test.webp", url: "/manus-storage/editorial/7/test.webp" });
+    const create = vi.spyOn(db, "createArticle").mockResolvedValue(654);
+    const caller = appRouter.createCaller(createContext("user"));
+    const media = await caller.media.uploadImage({ filename: "cover.webp", mimeType: "image/webp", base64: "aGVsbG8=" });
+    const references = [{ title: "แหล่งอ้างอิงของผู้ส่ง", url: "https://example.com/reference" }];
+    const result = await caller.articles.myCreate({ article: { ...articleWithoutSources, coverImageKey: media.key, coverImageUrl: media.url, coverAlt: "ภาพปกบทความ", references }, action: "submit" });
+    expect(media).toEqual({ key: "editorial/7/test.webp", url: "/manus-storage/editorial/7/test.webp" });
+    expect(upload).toHaveBeenCalledWith(expect.stringMatching(/^editorial\/7\/[A-Za-z0-9_-]+\.webp$/), expect.any(Buffer), "image/webp");
+    expect(result).toEqual({ id: 654 });
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({ status: "submitted", coverImageKey: media.key, coverImageUrl: media.url, references, authorId: 7 }));
   });
 
   it("requires a review note when sending an article back", async () => {
