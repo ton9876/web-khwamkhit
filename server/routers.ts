@@ -19,7 +19,17 @@ const referenceSchema = z.object({
   note: z.string().trim().max(500).optional(),
 });
 const articleInputSchema = z.object({
-  slug: z.string().trim().min(3).max(180).regex(/^[a-z0-9-]+$/, "ใช้ตัวอักษรอังกฤษ ตัวเลข และขีดกลางเท่านั้น"),
+  // Thai titles cannot be transliterated reliably on the client. If the editor
+  // leaves the URL blank (or enters only Thai characters), keep publishing
+  // safe by assigning a unique, readable fallback slug instead of returning a
+  // cryptic Zod "too_small" error.
+  slug: z.preprocess((value) => {
+    if (typeof value !== "string") return value;
+    const cleaned = value.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+    return cleaned.length >= 3
+      ? cleaned
+      : `article-${Date.now().toString(36)}-${nanoid(6).toLowerCase()}`;
+  }, z.string().min(3).max(180).regex(/^[a-z0-9-]+$/, "ใช้ตัวอักษรอังกฤษ ตัวเลข และขีดกลางเท่านั้น")),
   title: z.string().trim().min(5).max(255),
   excerpt: z.string().trim().min(15).max(1200),
   topic: topicSchema,

@@ -73,7 +73,10 @@ export function EditorDashboard() {
   </section></EditorShell>;
 }
 
-function articlePayload(form: FormState) { return { slug: form.slug.trim(), title: form.title.trim(), excerpt: form.excerpt.trim(), topic: form.topic, body: form.body.split(/\n\s*\n/).map((part) => part.trim()).filter(Boolean), coverImageKey: form.coverImageKey, coverImageUrl: form.coverImageUrl, coverAlt: form.coverAlt.trim() || null, videoUrl: form.videoUrl.trim(), references: form.references }; }
+function articlePayload(form: FormState) {
+  const cleanedSlug = form.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "");
+  return { slug: cleanedSlug, title: form.title.trim(), excerpt: form.excerpt.trim(), topic: form.topic, body: form.body.split(/\n\s*\n/).map((part) => part.trim()).filter(Boolean), coverImageKey: form.coverImageKey, coverImageUrl: form.coverImageUrl, coverAlt: form.coverAlt.trim() || null, videoUrl: form.videoUrl.trim(), references: form.references };
+}
 function readAsBase64(file: File) { return new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onerror = () => reject(new Error("ไม่สามารถอ่านไฟล์ภาพได้")); reader.onload = () => resolve(String(reader.result).split(",")[1] || ""); reader.readAsDataURL(file); }); }
 
 export function EditorArticleForm() {
@@ -100,7 +103,18 @@ export function EditorArticleForm() {
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) => setForm((prev) => ({ ...prev, [key]: value }));
   const addReference = () => set("references", [...form.references, { title: "", url: "", author: "", publisher: "", publishedAt: "", note: "" }]);
   const updateReference = (index: number, field: keyof ArticleReference, value: string) => set("references", form.references.map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item));
-  const save = (action: "draft" | "submit" | "publish") => (event: FormEvent) => { event.preventDefault(); const article = articlePayload(form); if (isAdmin) { if (isNew) adminCreate.mutate({ article, publish: action === "publish" }); else adminUpdate.mutate({ id, article, publish: action === "publish" }); } else if (isNew) myCreate.mutate({ article, action: action === "submit" ? "submit" : "draft" }); else myUpdate.mutate({ id, article, action: action === "submit" ? "submit" : "draft" }); };
+  const save = (action: "draft" | "submit" | "publish") => (event: FormEvent) => {
+    event.preventDefault();
+    const parsedArticle = articlePayload(form);
+    const article = parsedArticle.slug.length < 3
+      ? { ...parsedArticle, slug: `article-${Date.now().toString(36)}` }
+      : parsedArticle;
+    if (parsedArticle.slug.length < 3) {
+      toast.info("ระบบจะสร้างลิงก์ภาษาอังกฤษให้อัตโนมัติ เนื่องจากช่องลิงก์ว่างหรือมีอักษรไทย");
+      set("slug", article.slug);
+    }
+    if (isAdmin) { if (isNew) adminCreate.mutate({ article, publish: action === "publish" }); else adminUpdate.mutate({ id, article, publish: action === "publish" }); } else if (isNew) myCreate.mutate({ article, action: action === "submit" ? "submit" : "draft" }); else myUpdate.mutate({ id, article, action: action === "submit" ? "submit" : "draft" });
+  };
   const onFile = async (event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (!file) return; if (file.size > 5 * 1024 * 1024) { toast.error("ขนาดไฟล์ภาพต้องไม่เกิน 5 MB"); return; } try { upload.mutate({ filename: file.name, mimeType: file.type, base64: await readAsBase64(file) }); } catch (error) { toast.error(error instanceof Error ? error.message : "อัปโหลดภาพไม่สำเร็จ"); } };
   const editable = isNew || !current || current.status === "draft" || current.status === "changes_requested" || isAdmin;
   if (!isNew && isLoading) return <EditorShell><div className="grid min-h-80 place-items-center"><Loader2 className="animate-spin text-[#b8653d]" /></div></EditorShell>;
@@ -109,7 +123,7 @@ export function EditorArticleForm() {
     {current?.reviewNote && !isAdmin ? <div className="mt-6 rounded-xl border border-[#b8653d]/20 bg-[#f4dfd5] p-4 text-sm leading-6 text-[#713b2a]"><strong>คำแนะนำจากบรรณาธิการ:</strong> {current.reviewNote}</div> : null}
     <form className="mt-10 space-y-7 rounded-2xl border border-[#243932]/10 bg-[#fbf9f3] p-5 md:p-8" onSubmit={save("draft")}>
       <fieldset disabled={!editable} className="space-y-7"><div className="grid gap-6 md:grid-cols-[1fr_220px]"><div className="space-y-2"><Label htmlFor="title">ชื่อเรื่อง</Label><Input id="title" value={form.title} onChange={(event) => set("title", event.target.value)} placeholder="ชื่อเรื่องที่ชวนให้หยุดคิด" className="border-[#243932]/15 bg-white" required /></div><div className="space-y-2"><Label htmlFor="topic">หัวข้อ</Label><select id="topic" value={form.topic} onChange={(event) => set("topic", event.target.value as TopicId)} className="flex h-10 w-full rounded-md border border-[#243932]/15 bg-white px-3 text-sm">{TOPICS.map((topic) => <option key={topic.id} value={topic.id}>{topic.label}</option>)}</select></div></div>
-      <div className="space-y-2"><Label htmlFor="slug">ลิงก์บทความ (ภาษาอังกฤษ)</Label><Input id="slug" value={form.slug} onChange={(event) => set("slug", event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} placeholder="a-short-english-link" className="border-[#243932]/15 bg-white" required /><p className="text-xs text-[#7b877f]">ใช้ตัวอักษรอังกฤษ ตัวเลข และขีดกลาง เพื่อสร้างลิงก์ที่อ่านง่าย</p></div>
+      <div className="space-y-2"><Label htmlFor="slug">ลิงก์บทความ (ภาษาอังกฤษ)</Label><Input id="slug" value={form.slug} onChange={(event) => set("slug", event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} placeholder="เว้นว่างได้ ระบบจะสร้างให้อัตโนมัติ" className="border-[#243932]/15 bg-white" /><p className="text-xs text-[#7b877f]">ใช้ตัวอักษรอังกฤษ ตัวเลข และขีดกลาง หรือเว้นว่างให้ระบบสร้างลิงก์อัตโนมัติ</p></div>
       <div className="space-y-2"><Label htmlFor="excerpt">คำโปรย</Label><Textarea id="excerpt" value={form.excerpt} onChange={(event) => set("excerpt", event.target.value)} placeholder="สรุปสิ่งที่ผู้อ่านจะได้จากบทความชิ้นนี้" className="min-h-24 border-[#243932]/15 bg-white" required /></div><div className="space-y-2"><Label htmlFor="body">เนื้อหาบทความ</Label><Textarea id="body" value={form.body} onChange={(event) => set("body", event.target.value)} placeholder="เขียนเนื้อหาเป็นย่อหน้า โดยเว้นหนึ่งบรรทัดระหว่างย่อหน้า" className="min-h-80 border-[#243932]/15 bg-white leading-7" required /><p className="text-xs text-[#7b877f]">เว้นหนึ่งบรรทัดเพื่อแยกย่อหน้าเมื่อแสดงผลบนหน้าสาธารณะ</p></div>
       <div className="rounded-xl border border-[#243932]/10 bg-[#f6f2e9] p-5"><div className="flex flex-col justify-between gap-4 md:flex-row md:items-start"><div><p className="font-semibold text-[#243932]">ภาพปกบทความ</p><p className="mt-1 text-sm text-[#65736c]">รองรับ JPG, PNG, WEBP หรือ GIF ขนาดไม่เกิน 5 MB</p></div><label className="button-ink w-fit text-sm"><UploadCloud size={16} /> {upload.isPending ? "กำลังอัปโหลด" : "เลือกภาพ"}<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={onFile} className="hidden" disabled={upload.isPending || !editable} /></label></div>{form.coverImageUrl ? <div className="mt-5 grid gap-4 md:grid-cols-[180px_1fr]"><img src={form.coverImageUrl} alt={form.coverAlt || "ตัวอย่างภาพปก"} className="aspect-[4/3] w-full rounded-lg object-cover" /><div className="space-y-2"><Label htmlFor="coverAlt">คำอธิบายภาพ (Alt text)</Label><Input id="coverAlt" value={form.coverAlt} onChange={(event) => set("coverAlt", event.target.value)} placeholder="อธิบายภาพอย่างกระชับ" className="border-[#243932]/15 bg-white" /></div></div> : <div className="mt-5 flex items-center gap-2 text-sm text-[#7b877f]"><FileImage size={16} /> ยังไม่ได้เลือกภาพปก ระบบจะใช้ภาพลวดลายพื้นฐานแทน</div>}</div>
       <div className="space-y-2"><Label htmlFor="video">URL คลิปวิดีโอประกอบ (ไม่บังคับ)</Label><Input id="video" type="url" value={form.videoUrl} onChange={(event) => set("videoUrl", event.target.value)} placeholder="YouTube หรือ Vimeo URL" className="border-[#243932]/15 bg-white" /></div>

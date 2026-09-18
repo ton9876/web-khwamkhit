@@ -36,6 +36,13 @@ describe("editorial authorization and validation", () => {
     await expect(caller.articles.create({ article: articleWithoutSources, publish: true })).rejects.toMatchObject({ code: "BAD_REQUEST", message: "บทความที่เผยแพร่ต้องระบุแหล่งอ้างอิงอย่างน้อยหนึ่งรายการ" });
   });
 
+  it("generates a safe fallback slug when an editor leaves the slug blank", async () => {
+    const create = vi.spyOn(db, "createArticle").mockResolvedValue(322);
+    const caller = appRouter.createCaller(createContext("admin"));
+    await expect(caller.articles.create({ article: { ...articleWithoutSources, slug: "", references: [{ title: "แหล่งอ้างอิงทดสอบ", url: "https://example.com/source" }] }, publish: true })).resolves.toEqual({ id: 322 });
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({ status: "published", slug: expect.stringMatching(/^article-[a-z0-9-]+$/) }));
+  });
+
   it("requires authentication before rating an article", async () => {
     const caller = appRouter.createCaller(createUnauthenticatedContext());
     await expect(caller.engagement.rate({ articleId: 1, rating: 5 })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
