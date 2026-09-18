@@ -1,4 +1,4 @@
-# Project TODO — พื้นทางความคิด
+# Project TODO — คิดดีมีพลัง (One Thought, Million Changes)
 
 ## งานที่เสร็จแล้ว
 

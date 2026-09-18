@@ -32,7 +32,7 @@ export default function Home() {
             <div><p className="eyebrow">จุดตั้งต้น</p><div className="mt-6 grid h-16 w-16 place-items-center rounded-full border border-[#243932]/15 bg-[#fbf9f3] text-[#b8653d]"><Compass size={26} strokeWidth={1.5} /></div></div>
             <div>
               <h2 className="font-serif-thai text-3xl font-semibold leading-[1.45] tracking-tight md:text-5xl">เราไม่ต้องรีบมีคำตอบเสมอไป แต่อาจเริ่มจากการเห็นคำถามของชีวิตให้ชัดขึ้น</h2>
-              <p className="mt-7 max-w-2xl text-base leading-8 text-[#5f6d66]">พื้นทางความคิดชวนผู้อ่านเชื่อมความรู้ ความรู้สึก และความรับผิดชอบเข้าด้วยกัน เนื้อหาทุกชิ้นจึงมุ่งให้บริบท แสดงแหล่งอ้างอิง และเคารพความซับซ้อนของชีวิตจริง</p>
+              <p className="mt-7 max-w-2xl text-base leading-8 text-[#5f6d66]">คิดดีมีพลังชวนผู้อ่านเชื่อมความรู้ ความรู้สึก และความรับผิดชอบเข้าด้วยกัน เนื้อหาทุกชิ้นจึงมุ่งให้บริบท แสดงแหล่งอ้างอิง และเคารพความซับซ้อนของชีวิตจริง</p>
             </div>
           </div>
         </section>
