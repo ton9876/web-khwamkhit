@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { ArrowDownRight, ArrowRight, BookOpen, Compass, Sprout } from "lucide-react";
 import { Link } from "wouter";
 
-const HERO_IMAGE = "/manus-storage/phuenthang-hero_3326df0c.png";
+const HERO_IMAGE = "/manus-storage/kiddee-hero_4b6562c3.png";
 
 export default function Home() {
   const { data: articles } = trpc.articles.listPublished.useQuery();
@@ -14,7 +14,7 @@ export default function Home() {
     <PublicLayout>
       <main>
         <section className="relative min-h-[650px] overflow-hidden bg-[#243932] text-[#f6f2e9] md:min-h-[710px]">
-          <img src={HERO_IMAGE} alt="สวนเขตร้อนยามเช้าที่เงียบสงบ" className="absolute inset-0 h-full w-full object-cover object-right opacity-70" />
+          <img src={HERO_IMAGE} alt="คิดดีมีพลัง รวบรวมความคิดดีที่มีพลัง" className="absolute inset-0 h-full w-full object-cover object-center opacity-90" />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(22,45,38,0.98)_0%,rgba(26,52,43,0.82)_45%,rgba(26,52,43,0.18)_100%)]" />
           <div className="container relative z-10 flex min-h-[650px] flex-col justify-end pb-16 pt-28 md:min-h-[710px] md:pb-24">
             <p className="eyebrow text-[#d9c795]">คิดดีมีพลัง · ปล่อย · ภูมิคุ้มกันใจ</p>

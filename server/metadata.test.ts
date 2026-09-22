@@ -8,7 +8,7 @@ describe("public social metadata", () => {
 
     expect(html).toContain('<meta property="og:type" content="website" />');
     expect(html).toContain('<meta property="og:url" content="https://khwamkhit-gwjjpjtp.manus.space/articles" />');
-    expect(html).toContain('property="og:image" content="https://khwamkhit-gwjjpjtp.manus.space/manus-storage/phuenthang-hero_3326df0c.png"');
+    expect(html).toContain('property="og:image" content="https://khwamkhit-gwjjpjtp.manus.space/manus-storage/kiddee-hero_4b6562c3.png"');
     expect(html).toContain('<meta name="twitter:card" content="summary_large_image" />');
   });
 });
