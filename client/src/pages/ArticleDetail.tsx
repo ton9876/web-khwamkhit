@@ -1,6 +1,7 @@
 import PublicLayout from "@/components/PublicLayout";
 import ArticleEngagement from "@/components/ArticleEngagement";
-import { formatThaiDate, getTopic } from "@shared/editorial";
+import ArticleCard from "@/components/ArticleCard";
+import { formatThaiDate, getRelatedArticles, getTopic } from "@shared/editorial";
 import { ArrowLeft, ExternalLink, Play } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Link, useRoute } from "wouter";
@@ -24,6 +25,7 @@ export default function ArticleDetail() {
   const [, params] = useRoute("/articles/:slug");
   const slug = params?.slug || "";
   const { data: article, isLoading } = trpc.articles.bySlug.useQuery({ slug }, { enabled: Boolean(slug) });
+  const { data: publishedArticles } = trpc.articles.listPublished.useQuery(undefined, { enabled: Boolean(slug) });
 
   if (isLoading) {
     return <PublicLayout><main className="container grid min-h-[60vh] place-items-center text-sm text-[#65736c]">กำลังเปิดบทความ…</main></PublicLayout>;
@@ -43,6 +45,7 @@ export default function ArticleDetail() {
 
   const topic = getTopic(article.topic);
   const embedUrl = article.videoUrl ? getEmbedUrl(article.videoUrl) : null;
+  const relatedArticles = getRelatedArticles(publishedArticles ?? [], article.id, article.topic);
 
   return (
     <PublicLayout>
@@ -96,6 +99,22 @@ export default function ArticleDetail() {
               </div>
             </div>
           </section>
+
+          {relatedArticles.length ? (
+            <section className="container py-14 md:py-20">
+              <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+                <div>
+                  <p className="eyebrow">อ่านต่อ</p>
+                  <h2 className="mt-4 font-serif-thai text-3xl font-semibold tracking-tight md:text-4xl">บทความที่เกี่ยวข้อง</h2>
+                  <p className="mt-3 max-w-2xl text-sm leading-7 text-[#65736c]">ชวนสำรวจมุมมองอื่นในหัวข้อเดียวกัน หรือเปิดพื้นที่ให้ความคิดจากเรื่องใกล้เคียงได้เชื่อมโยงกัน</p>
+                </div>
+                <Link href="/articles" className="inline-flex items-center text-sm font-semibold text-[#b8653d]">ดูบทความทั้งหมด</Link>
+              </div>
+              <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {relatedArticles.map((relatedArticle) => <ArticleCard key={relatedArticle.id} article={relatedArticle} />)}
+              </div>
+            </section>
+          ) : null}
         </article>
       </main>
     </PublicLayout>

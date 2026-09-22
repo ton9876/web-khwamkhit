@@ -72,6 +72,13 @@ export function getTopic(id: TopicId) {
   return TOPICS.find((topic) => topic.id === id) ?? TOPICS[0];
 }
 
+export function getRelatedArticles(articles: EditorialArticle[], currentId: number, topic: TopicId, limit = 3) {
+  const remaining = articles.filter((article) => article.id !== currentId && article.status === "published");
+  const sameTopic = remaining.filter((article) => article.topic === topic);
+  const otherTopics = remaining.filter((article) => article.topic !== topic);
+  return [...sameTopic, ...otherTopics].slice(0, limit);
+}
+
 export function formatThaiDate(value: string | Date) {
   return new Intl.DateTimeFormat("th-TH", {
     day: "numeric",

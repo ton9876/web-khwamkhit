@@ -3,6 +3,7 @@ import { appRouter } from "./routers";
 import * as db from "./db";
 import * as storage from "./storage";
 import type { TrpcContext } from "./_core/context";
+import { getRelatedArticles } from "../shared/editorial";
 
 function createContext(role: "admin" | "user"): TrpcContext {
   return {
@@ -26,6 +27,17 @@ const articleWithoutSources = {
 };
 
 describe("editorial authorization and validation", () => {
+  it("prioritizes published articles from the same topic for recommendations", () => {
+    const recommendations = getRelatedArticles([
+      { id: 1, topic: "living", status: "published" },
+      { id: 2, topic: "food", status: "published" },
+      { id: 3, topic: "living", status: "published" },
+      { id: 4, topic: "environment", status: "draft" },
+      { id: 5, topic: "ethics", status: "published" },
+    ] as never, 1, "living", 3);
+    expect(recommendations.map((article) => article.id)).toEqual([3, 2, 5]);
+  });
+
   it("blocks a non-admin from using the direct publishing endpoint", async () => {
     const caller = appRouter.createCaller(createContext("user"));
     await expect(caller.articles.create({ article: articleWithoutSources, publish: false })).rejects.toMatchObject({ code: "FORBIDDEN" });
