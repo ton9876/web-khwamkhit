@@ -39,6 +39,11 @@ export async function getDb() {
   return _db;
 }
 
+export function resolveRoleUpdate(incomingRole: "user" | "admin" | undefined, isOwner: boolean) {
+  if (incomingRole !== undefined) return incomingRole;
+  return isOwner ? "admin" : undefined;
+}
+
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) throw new Error("User openId is required for upsert");
   const db = await getDb();
@@ -59,8 +64,13 @@ export async function upsertUser(user: InsertUser): Promise<void> {
 
   values.lastSignedIn = user.lastSignedIn ?? new Date();
   updateSet.lastSignedIn = values.lastSignedIn;
-  values.role = user.role ?? (user.openId === ENV.ownerOpenId ? "admin" : "user");
-  updateSet.role = values.role;
+  const isOwner = user.openId === ENV.ownerOpenId;
+  const roleUpdate = resolveRoleUpdate(user.role, isOwner);
+  values.role = roleUpdate ?? "user";
+  // OAuth callbacks do not include a role. Preserve an existing admin/user role
+  // on duplicate users; only explicit role changes or the configured owner may
+  // update the role column.
+  if (roleUpdate !== undefined) updateSet.role = roleUpdate;
   await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateSet });
 }
 
