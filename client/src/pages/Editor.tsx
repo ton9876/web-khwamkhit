@@ -61,6 +61,14 @@ function CommentModeration({ enabled }: { enabled: boolean }) {
   return <section className="mt-8 rounded-2xl border border-[#243932]/10 bg-[#fbf9f3] p-5 md:p-7"><div className="flex items-end justify-between gap-3"><div><p className="eyebrow">ดูแลชุมชน</p><h2 className="mt-2 font-serif-thai text-2xl font-semibold text-[#243932]">ความคิดเห็นล่าสุด</h2></div><span className="text-xs text-[#7b877f]">ซ่อนความคิดเห็นที่ไม่เหมาะสมได้</span></div>{isLoading ? <div className="grid min-h-24 place-items-center"><Loader2 className="animate-spin text-[#b8653d]" /></div> : comments?.length ? <div className="mt-5 space-y-3">{comments.map((comment) => <div key={comment.id} className="rounded-xl border border-[#243932]/10 bg-white p-4"><div className="flex items-center justify-between gap-3"><p className="font-semibold text-[#243932]">{comment.authorName}</p><span className="text-xs text-[#7b877f]">{comment.status === "visible" ? "แสดงอยู่" : "ซ่อนแล้ว"}</span></div><p className="mt-2 text-sm leading-7 text-[#53645c]">{comment.body}</p>{comment.status === "visible" ? <Button type="button" variant="outline" size="sm" onClick={() => hide.mutate({ id: comment.id })} disabled={hide.isPending} className="mt-3 border-[#b8653d]/25 text-[#9b4c2e]">ซ่อนความคิดเห็น</Button> : null}</div>)}</div> : <p className="mt-5 text-sm text-[#7b877f]">ยังไม่มีความคิดเห็นจากผู้อ่าน</p>}</section>;
 }
 
+export function AdminBackoffice() {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="grid min-h-screen place-items-center bg-[#f6f2e9]"><Loader2 className="animate-spin text-[#b8653d]" /></div>;
+  if (!user) return <div className="grid min-h-screen place-items-center bg-[#f6f2e9] p-6 text-center"><div><p className="eyebrow">พื้นที่ผู้ดูแลระบบ</p><h1 className="mt-4 font-serif-thai text-3xl">เข้าสู่ระบบสำหรับผู้ดูแล</h1><Button onClick={() => startLogin()} className="mt-7 bg-[#243932]">เข้าสู่ระบบ</Button></div></div>;
+  if (user.role !== "admin") return <div className="grid min-h-screen place-items-center bg-[#f6f2e9] p-6 text-center"><div><p className="eyebrow">พื้นที่ผู้ดูแลระบบ</p><h1 className="mt-4 font-serif-thai text-3xl">ไม่มีสิทธิ์เข้าถึง</h1><p className="mt-3 text-sm text-[#65736c]">บัญชีนี้เป็นผู้เขียนทั่วไป กรุณาใช้บัญชีผู้ดูแลระบบ</p><Link href="/editor" className="mt-7 inline-flex text-sm font-semibold text-[#b8653d]">ไปยังพื้นที่นักเขียน</Link></div></div>;
+  return <EditorDashboard />;
+}
+
 export function EditorDashboard() {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin";
