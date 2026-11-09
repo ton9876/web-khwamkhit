@@ -14,10 +14,10 @@ export default function Home() {
     <PublicLayout>
       <main>
         <section className="relative min-h-[650px] overflow-hidden bg-[#243932] text-[#f6f2e9] md:min-h-[710px]">
-          <img src={HERO_IMAGE} alt="คิดดีมีพลัง รวบรวมความคิดดีที่มีพลัง" className="absolute inset-0 h-full w-full object-cover object-center opacity-90" />
+          <img src={HERO_IMAGE} alt="วันปล่อยพลัง พื้นที่รวบรวมความคิดและแรงบันดาลใจ" className="absolute inset-0 h-full w-full object-cover object-center opacity-90" />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(22,45,38,0.98)_0%,rgba(26,52,43,0.82)_45%,rgba(26,52,43,0.18)_100%)]" />
           <div className="container relative z-10 flex min-h-[650px] flex-col justify-end pb-16 pt-28 md:min-h-[710px] md:pb-24">
-            <p className="eyebrow text-[#d9c795]">คิดดีมีพลัง · ปล่อย · ภูมิคุ้มกันใจ</p>
+            <p className="eyebrow text-[#d9c795]">วันปล่อยพลัง · ปล่อย · ภูมิคุ้มกันใจ</p>
             <h1 className="mt-6 max-w-4xl font-serif-thai text-5xl font-semibold leading-[1.2] tracking-tight md:text-7xl">ความคิดที่เปิดพื้นที่<br />ให้ชีวิตหายใจ</h1>
             <p className="mt-7 max-w-xl text-base leading-8 text-[#eae4d6]/82 md:text-lg">พื้นที่สำหรับมองเรื่องใกล้ตัวอย่างลึกซึ้งขึ้น ตั้งแต่การใช้ชีวิต การกินอยู่ สิ่งแวดล้อม ไปจนถึงศีลธรรมจรรยา</p>
             <div className="mt-9 flex flex-wrap gap-3">
@@ -32,7 +32,7 @@ export default function Home() {
             <div><p className="eyebrow">จุดตั้งต้น</p><div className="mt-6 grid h-16 w-16 place-items-center rounded-full border border-[#243932]/15 bg-[#fbf9f3] text-[#b8653d]"><Compass size={26} strokeWidth={1.5} /></div></div>
             <div>
               <h2 className="font-serif-thai text-3xl font-semibold leading-[1.45] tracking-tight md:text-5xl">เราไม่ต้องรีบมีคำตอบเสมอไป แต่อาจเริ่มจากการเห็นคำถามของชีวิตให้ชัดขึ้น</h2>
-              <p className="mt-7 max-w-2xl text-base leading-8 text-[#5f6d66]">คิดดีมีพลังชวนผู้อ่านเชื่อมความรู้ ความรู้สึก และความรับผิดชอบเข้าด้วยกัน เนื้อหาทุกชิ้นจึงมุ่งให้บริบท แสดงแหล่งอ้างอิง และเคารพความซับซ้อนของชีวิตจริง</p>
+              <p className="mt-7 max-w-2xl text-base leading-8 text-[#5f6d66]">วันปล่อยพลังชวนผู้อ่านเชื่อมความรู้ ความรู้สึก และความรับผิดชอบเข้าด้วยกัน เนื้อหาทุกชิ้นจึงมุ่งให้บริบท แสดงแหล่งอ้างอิง และเคารพความซับซ้อนของชีวิตจริง</p>
             </div>
           </div>
         </section>

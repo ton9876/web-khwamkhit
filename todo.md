@@ -1,4 +1,4 @@
-# Project TODO — คิดดีมีพลัง (One Thought, Million Changes)
+# Project TODO — วันปล่อยพลัง (One Thought, Million Changes)
 
 ## งานที่เสร็จแล้ว
 
